@@ -36,44 +36,7 @@ w — run in browser
 or scan QR code with Expo Go
 
 Design & Technical Decisions
-Part A — Web Application (React + TS)
--Core Features
--Add tasks
--Start/stop timers
--Only one running task at a time
--Auto-accumulate time
--Persist tasks using localStorage
 
-Architecture
--useTasks custom hook
- Encapsulates all logic: add, start/stop, accumulated time, persistence.
--Component structure:
-  AddTaskForm — input + add button
-  TaskList — renders all tasks
-  TaskItem — individual task row
--Timer logic:
-  Uses accumulatedMs + startedAt timestamp
-  Live updates using a setInterval tick-
-  Starting one task automatically stops the previous one
--Persistence
-  Tasks stored in localStorage
-  On refresh, tasks reload and running ones are marked stopped (simple + predictable)
-
-Part B — Mobile Application (React Native + Expo)
-Core Features
--Task title + description
--25:00 Pomodoro countdown
--Start / Pause
--Resume functionality
--Clean mobile UI
-
-Architecture
--Simple component state (useState)
--Timer loop managed via useEffect
--Layout built with React Native components: SafeAreaView, View, Text, TouchableOpacity
-
-Timer Logic
--remainingSeconds starts at 1500
--isRunning starts interval that decrements every second
--Auto-stops at 0
--Pause simply stops the interval
+The codebase is organized to separate concerns and promote maintainability. 
+For the web application, a custom `useTasks` hook centralizes all task and timer logic, encapsulating state management, localStorage persistence, and the single-active-timer constraint. This approach keeps components focused on presentation while the hook handles business logic. The component structure follows a clear hierarchy: `AddTaskForm` for input, `TaskList` for orchestration, and `TaskItem` for individual task rendering. Timer implementation uses accumulated milliseconds plus a `startedAt` timestamp, allowing accurate time tracking even when the page is refreshed (timers are stopped on reload for predictability). 
+For the mobile app, a simpler state-based approach with `useState` and `useEffect` suffices for the Pomodoro timer, as it's a single-screen feature without complex state management needs. The separation of web and mobile codebases allows each to use platform-appropriate patterns and dependencies without cross-contamination.
